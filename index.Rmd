@@ -1,0 +1,67 @@
+---
+title: "Multiple Columns"
+output: flexdashboard::flex_dashboard
+---
+    
+Column {data-width=600}
+-------------------------------------
+    
+### Chart 1
+    
+```{r}
+# ------------------------------------------------------------------------------
+
+library(tidyverse)
+library(readxl)
+library(scales) # Necessário para formatação de eixos (porcentagem, etc.)
+
+# Importação dos dados da aula anterior ajustando os nulos (NAs)
+alunos <- read_delim("dados/alunos.txt", delim = " ", na = c("NA", ""), show_col_types = FALSE)
+desempenho <- read_csv("dados/desempenho.csv", na = c("NA", ""), show_col_types = FALSE)
+
+alunos_desempenho_completo <- alunos |>
+  left_join(desempenho, by = "id_aluno") |>
+  drop_na(modalidade, periodo_letivo)
+
+ggplot(data = alunos_desempenho_completo, 
+       mapping = aes(x = horas_estudo, y = prova_1, color = modalidade)) +
+  geom_point(alpha = 0.6, size = 2) +
+  scale_color_brewer(palette = "Set1") +
+  facet_wrap(~ periodo_letivo) +
+  coord_cartesian(xlim = c(0, 30)) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+   
+Column {data-width=400}
+-------------------------------------
+   
+### Chart 2
+
+```{r}
+ggplot(
+  alunos_desempenho_completo,
+  aes(x = horas_estudo, fill = modalidade)
+) +
+  geom_density(alpha = 0.4) +
+  labs(
+    title = "Distribuição das Horas de Estudo por Modalidade",
+    x = "Horas de Estudo",
+    y = "Densidade",
+    fill = "Modalidade"
+  ) +
+  theme_minimal()
+```   
+ 
+### Chart 3
+    
+```{r}
+ggplot(desempenho, aes(x = periodo_letivo, y = prova_1)) +
+  geom_violin(fill = "steelblue", alpha = 0.6) +
+  labs(
+    title = "Distribuição das Notas da Prova 1 por Período (Violin)",
+    x = "Período Letivo",
+    y = "Nota"
+  )
+
+```
