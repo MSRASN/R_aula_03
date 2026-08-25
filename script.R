@@ -23,9 +23,6 @@ alunos_desempenho_completo <- alunos |>
   drop_na(modalidade, periodo_letivo)
 
 
-# ==============================================================================
-# INTRODUÇÃO DIDÁTICA: CONSTRUÇÃO CUMULATIVA EM CAMADAS (A IMAGEM DAS CAMADAS)
-# ==============================================================================
 # Vamos construir um gráfico passo a passo, acumulando as camadas da imagem
 # para entender o papel de cada uma delas no código.
 
@@ -80,7 +77,6 @@ ggplot(data = alunos_desempenho_completo,
   theme_minimal() +
   theme(legend.position = "bottom")
 
-
 # ==============================================================================
 # PARTE 1: ENTENDENDO O PROCESSO DE CONTAGEM (geom_bar vs geom_col)
 # ==============================================================================
@@ -102,7 +98,7 @@ alunos_modalidade <- alunos |>
   count(modalidade)
 
 ggplot(alunos_modalidade, aes(x = modalidade, y = n)) +
-  geom_col(fill = "steelblue") +
+  geom_col(color = "red") +
   labs(
     title = "Quantidade de Alunos por Modalidade (geom_col)",
     x = "Modalidade",
@@ -271,17 +267,8 @@ ggplot(proporcao_sexo, aes(x = modalidade, y = proporcao, fill = sexo)) +
 # PARTE 6: VISUALIZAÇÃO ESTATÍSTICA (Pontos Agregados e Barras de Erro)
 # ------------------------------------------------------------------------------
 
-# 6.1 Gráfico de Pontos Agregados (Médias Simples)
-media_periodo <- desempenho |>
-  group_by(periodo_letivo) |>
-  summarise(media = mean(prova_1, na.rm = TRUE))
 
-ggplot(media_periodo, aes(x = periodo_letivo, y = media)) +
-  geom_point(size = 4, color = "firebrick") +
-  labs(title = "Média da Prova 1 por Período", x = "Período", y = "Nota Média") +
-  theme_minimal()
-
-# 6.2 Gráfico de Erro (Média +/- Desvio Padrão)
+# Gráfico de Erro (Média +/- Desvio Padrão)
 resumo_estatistico <- desempenho |>
   group_by(periodo_letivo) |>
   summarise(
